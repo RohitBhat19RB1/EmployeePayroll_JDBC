@@ -86,19 +86,6 @@ public class EmployeePayrollService {
         employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, startDate));
     }
 
-    public void printData(IOService ioService) {
-        if (ioService.equals(IOService.FILE_IO))
-            new EmployeePayrollFileIOService().printData();
-        else  System.out.println(employeePayrollList);
-
-    }
-
-    public long countEntries(IOService ioService) {
-        if (ioService.equals(IOService.FILE_IO))
-            return new EmployeePayrollFileIOService().countEntries();
-        return employeePayrollList.size();
-    }
-
     public void addEmployeeToPayroll(List<EmployeePayrollData> employeePayrollDataList) {
         employeePayrollDataList.forEach(employeePayrollData -> {
                      System.out.println("Employee Being Added: " + employeePayrollData.name);
@@ -132,9 +119,28 @@ public class EmployeePayrollService {
         System.out.println(employeePayrollList);
     }
 
+    public void addEmployeeToPayroll(EmployeePayrollData employeePayrollData, IOService ioService) {
+        if (ioService.equals(IOService.DB_IO))
+            this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.gender, employeePayrollData.salary, employeePayrollData.startDate );
+        else employeePayrollList.add(employeePayrollData);
+    }
+
 
     private void addEmployeeToPayroll(String name,String gender, double salary, LocalDate startDate) {
         employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, startDate ));
+    }
+
+    public void printData(IOService ioService) {
+        if (ioService.equals(IOService.FILE_IO))
+            new EmployeePayrollFileIOService().printData();
+        else  System.out.println(employeePayrollList);
+
+    }
+
+    public long countEntries(IOService ioService) {
+        if (ioService.equals(IOService.FILE_IO))
+            return new EmployeePayrollFileIOService().countEntries();
+        return employeePayrollList.size();
     }
 
 
