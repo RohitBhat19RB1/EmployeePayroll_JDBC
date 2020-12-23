@@ -3,6 +3,15 @@ import java.util.*;
 
 public class EmployeePayrollService {
 
+    public void updateEmployeeSalary(String name, double salary) {
+            int result = employeePayrollDBService.updateEmployeeData(name, salary);
+            if (result == 0) return;
+
+        EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+        if (employeePayrollData != null) employeePayrollData.salary = salary;
+
+    }
+
     public enum IOService {CONSOLE_IO, FILE_IO, DB_IO, REST_IO}
 
     private List<EmployeePayrollData> employeePayrollList;
@@ -19,7 +28,7 @@ public class EmployeePayrollService {
         this.employeePayrollList = new ArrayList<>(employeePayrollList);
     }
 
-    private EmployeePayrollData getEmployeePayrollData(String name) {
+    public EmployeePayrollData getEmployeePayrollData(String name) {
         return this.employeePayrollList.stream()
                 .filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name))
                 .findFirst()
@@ -62,9 +71,11 @@ public class EmployeePayrollService {
         return this.employeePayrollList;
     }
 
-    public void updateEmployeeSalary(String name, double salary) {
-        int result = employeePayrollDBService.updateEmployeeData(name, salary);
-        if (result == 0) return;
+    public void updateEmployeeSalary(String name, double salary, IOService ioService) {
+        if(ioService.equals(IOService.DB_IO)) {
+            int result = employeePayrollDBService.updateEmployeeData(name, salary);
+            if (result == 0) return;
+        }
         EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
         if (employeePayrollData != null) employeePayrollData.salary = salary;
     }
